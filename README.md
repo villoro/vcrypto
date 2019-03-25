@@ -10,11 +10,9 @@ You can install it with pip by running:
 
     pip install v-crypt
 
-
 ## Usage
 
 TODO
-
 
 ## Authors
 * [Arnau Villoro](https://villoro.com)
