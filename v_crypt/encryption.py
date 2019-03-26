@@ -15,7 +15,7 @@
 
 from cryptography.fernet import Fernet
 
-from defaults import FILE_MASTER_DEFAULT, STORE_SECRET
+from .defaults import FILE_MASTER_DEFAULT, STORE_SECRET
 
 
 def create_password(filename=FILE_MASTER_DEFAULT, store_secret=STORE_SECRET):

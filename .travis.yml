@@ -6,15 +6,12 @@ python:
 - '3.6'
 
 install:
+- pip install -r requirements.txt
 - pip install codecov
-- pip install pylint
+- pip install pyyaml # For yaml storing
 
 script:
 - nosetests --with-coverage --cover-package=v_crypt --cover-erase --cover-inclusive
-- pylint --disable=W,R test
-- cd v_crypt
-- pylint --disable=W,R v_crypt
-- cd ..
 
 after_success:
 - codecov
