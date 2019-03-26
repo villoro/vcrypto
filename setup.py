@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name="v_crypt",
-    version="0.0.0.2",
+    version="1.0.0",
     author="Arnau Villoro",
     author_email="arnau@villoro.com",
     packages=["v_crypt"],

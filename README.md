@@ -24,8 +24,6 @@ You can install it with pip by running:
 
 ## Usage
 
-### Fast introduction
-
 ```python
 from v_crypt import Cipher
 
