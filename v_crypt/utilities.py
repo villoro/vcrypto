@@ -13,13 +13,14 @@
         utilities.create_password()
 """
 
+import os
 import json
 
 from .encryption import encrypt, decrypt, create_password
-from .defaults import FILE_SECRETS_DEFAULT_JSON
+from .defaults import FILE_SECRETS_DEFAULT_JSON, FILE_MASTER_DEFAULT
 
 
-def get_password(filename, environ_var_name=None):
+def get_password(filename=FILE_MASTER_DEFAULT, environ_var_name=None):
     """
         Retrives master password. By default it is read from a file.
         If can also be retrived from as environment var
@@ -31,10 +32,11 @@ def get_password(filename, environ_var_name=None):
 
     # If there is an environ variable use it instead of reading the file with secret
     if environ_var_name is not None:
-        password = os.environ.get(c.io.ENV_VAR_SECRET_NAME, None)
+        password = os.environ.get(environ_var_name, None)
 
         if password is None:
             print(f"Environ variable {environ_var_name} does not exist")
+            return None
 
         return password.encode()
 
@@ -68,7 +70,7 @@ def store_dictionary(data, filename):
 
         # Check that yaml is installed
         try:
-            import yaml  # pylint: disable=E0402
+            import yaml
         except ImportError:
             raise ImportError("yaml module missing: you migh solve it with 'pip install pyyaml'")
 
@@ -91,7 +93,7 @@ def read_dictionary(filename):
 
         # Check that yaml is installed
         try:
-            import yaml  # pylint: disable=E0402
+            import yaml
         except ImportError:
             raise ImportError("yaml module missing: you migh solve it with 'pip install pyyaml'")
 
