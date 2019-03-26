@@ -15,8 +15,8 @@
 
 import json
 
-from encryption import encrypt, decrypt, create_password
-from defaults import FILE_SECRETS_DEFAULT_JSON
+from .encryption import encrypt, decrypt, create_password
+from .defaults import FILE_SECRETS_DEFAULT_JSON
 
 
 def get_password(filename, environ_var_name=None):

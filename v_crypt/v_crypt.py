@@ -16,9 +16,9 @@
         cipher.create_password()
 """
 
-import utils as u
+from . import utils as u
 
-from defaults import FILE_MASTER_DEFAULT, FILE_SECRETS_DEFAULT_JSON, STORE_SECRET, STORE_SECRET
+from .defaults import FILE_MASTER_DEFAULT, FILE_SECRETS_DEFAULT_JSON, STORE_SECRET, STORE_SECRET
 
 
 class Cipher:
