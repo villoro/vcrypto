@@ -25,7 +25,9 @@ FILE_SECRETS_DEFAULT = "secrets.json"
 
 def create_password(filename=FILE_SECRET_DEFAULT, store_secret=True):
     """
-        Creates a new password and stores the password in a text file
+        Creates a new password and stores the password in a text file.
+        It is better than allowing the user to create the password:
+            https://stackoverflow.com/a/55147077/3488853
 
         Args:
             filename:       name of the file where to store the master password
@@ -107,6 +109,58 @@ def _decrypt(value, password):
     return Fernet(password).decrypt(value.encode()).decode()
 
 
+def _store_dictionary(data, filename):
+    """
+        Stores a dictionary in a file. It can store 'json' and 'yaml' files.
+        
+        Args:
+            data:       dictionary to store
+            filename:   where to store the dictionary
+    """
+
+    name, extension = filename.split(".")
+
+    # Store a json file
+    if extension == "json":
+        with open(filename, "w") as file:
+            json.dump(data, file, indent=2)
+
+    # Store a yaml
+    if extension in ["yml", "yaml"]:
+
+        # Check that yaml is installed
+        try:
+            import yaml
+        except ImportError:
+            raise ImportError("yaml module missing: you migh solve it with 'pip install pyyaml'")
+
+        with open(filename, "w") as file:
+            yaml.dump(data, file)
+
+
+def _read_dictionary(filename):
+    """ Reads a dictionary. It can read 'json' and 'yaml' files """
+
+    name, extension = filename.split(".")
+
+    # Store a json file
+    if extension == "json":
+        with open(filename, "r") as file:
+            return json.load(file)
+
+    # Store a yaml
+    if extension in ["yml", "yaml"]:
+
+        # Check that yaml is installed
+        try:
+            import yaml
+        except ImportError:
+            raise ImportError("yaml module missing: you migh solve it with 'pip install pyyaml'")
+
+        with open(filename, encoding="utf-8") as file:
+            return yaml.load(file)
+
+
 def save_secret(key, value, password=None, secrets_file=FILE_SECRETS_DEFAULT):
     """
         Add one secret in the json of secrets. It will create the json if needed
@@ -121,17 +175,16 @@ def save_secret(key, value, password=None, secrets_file=FILE_SECRETS_DEFAULT):
     if password is None:
         password = _get_password()
 
+    # Create an empty dict if file not found
     try:
-        with open(secrets_file, "r") as file:
-            data = json.load(file)
+        data = _read_dictionary(secrets_file)
 
     except FileNotFoundError:
         data = {}
 
     data[key] = _encrypt(value, password)
 
-    with open(secrets_file, "w") as file:
-        json.dump(data, file, indent=2)
+    _store_dictionary(data, secrets_file)
 
     print(f"Secret '{key}' saved")
 
@@ -149,8 +202,12 @@ def get_secret(key, password=None, secrets_file=FILE_SECRETS_DEFAULT):
     if password is None:
         password = _get_password()
 
-    with open(secrets_file, "r") as file:
-        data = json.load(file)
+    # Create an empty dict if file not found
+    try:
+        data = _read_dictionary(secrets_file)
+
+    except FileNotFoundError:
+        data = {}
 
     if key not in data:
         print(f"Key '{key}' not found in {secrets_file}")
