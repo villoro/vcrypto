@@ -15,7 +15,7 @@
 
 import utils as u
 
-from defaults import FILE_MASTER_DEFAULT, FILE_SECRETS_DEFAULT_JSON, STORE_SECRET
+from defaults import FILE_MASTER_DEFAULT, FILE_SECRETS_DEFAULT_JSON, STORE_SECRET, STORE_SECRET
 
 
 class Cipher:
@@ -70,7 +70,7 @@ class Cipher:
             secrets_file=self.secrets_file,
         )
 
-    def create_password(self, store_secret):
+    def create_password(self, store_secret=STORE_SECRET):
         """
             Creates a new master password.
 
