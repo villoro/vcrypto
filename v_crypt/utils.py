@@ -16,13 +16,10 @@
 import json
 
 from encryption import encrypt, decrypt, create_password
+from defaults import FILE_SECRETS_DEFAULT_JSON
 
 
-FILE_SECRET_DEFAULT = "secret.txt"
-FILE_SECRETS_DEFAULT = "secrets.json"
-
-
-def get_password(filename=FILE_SECRET_DEFAULT, environ_var_name=None):
+def get_password(filename, environ_var_name=None):
     """
         Retrives master password. By default it is read from a file.
         If can also be retrived from as environment var
@@ -102,7 +99,7 @@ def read_dictionary(filename):
             return yaml.load(file)
 
 
-def save_secret(key, value, password=None, secrets_file=FILE_SECRETS_DEFAULT):
+def save_secret(key, value, password=None, secrets_file=FILE_SECRETS_DEFAULT_JSON):
     """
         Add one secret in the json of secrets. It will create the json if needed
 
@@ -130,7 +127,7 @@ def save_secret(key, value, password=None, secrets_file=FILE_SECRETS_DEFAULT):
     print(f"Secret '{key}' saved")
 
 
-def get_secret(key, password=None, secrets_file=FILE_SECRETS_DEFAULT):
+def get_secret(key, password=None, secrets_file=FILE_SECRETS_DEFAULT_JSON):
     """
         Retrives one secret from the json of secrets
 

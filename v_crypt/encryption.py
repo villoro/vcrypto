@@ -15,8 +15,10 @@
 
 from cryptography.fernet import Fernet
 
+from defaults import FILE_MASTER_DEFAULT, STORE_SECRET
 
-def create_password(filename, store_secret=True):
+
+def create_password(filename=FILE_MASTER_DEFAULT, store_secret=STORE_SECRET):
     """
         Creates a new password and stores the password in a text file.
         It is better than allowing the user to create the password:
