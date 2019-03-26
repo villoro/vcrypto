@@ -8,6 +8,7 @@ python:
 install:
 - pip install -r requirements.txt
 - pip install codecov
+- pip install pyyaml # For yaml storing
 
 script:
 - nosetests --with-coverage --cover-package=v_crypt --cover-erase --cover-inclusive
