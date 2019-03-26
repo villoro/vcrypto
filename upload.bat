@@ -8,7 +8,7 @@ python -m twine upload dist/*
 :: ------------------------ code to upload to test ----------------------------
 
 :: upload to pypi TEST (pip)
-::python -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+:: python -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 
 :: Check installation from test
 :: pip install --index-url https://test.pypi.org/simple/ v-crypt
