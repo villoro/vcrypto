@@ -1,16 +1,19 @@
 """
     Encrypt/Decrypt functions using Fernet.
 
+    Initialize:
+        cipher = Cipher()
+
     You can encrypt a string with:
-        encryption.encrypt("secret", key)
+        cipher.encrypt("secret", key)
 
     And then you can decrypt it with:
-        value = encryption.decrypt(crypted_string, key)
+        value = cipher.decrypt(crypted_string, key)
 
     In order to do that you'll need an environ var or a txt with the secret.
     
     To create a master password:
-        encryption.create_password()
+        cipher.create_password()
 """
 
 import utils as u
