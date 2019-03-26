@@ -11,14 +11,14 @@
         value = cipher.decrypt(crypted_string, key)
 
     In order to do that you'll need an environ var or a txt with the secret.
-    
+
     To create a master password:
         cipher.create_password()
 """
 
-from . import utils as u
+from . import utilities as u
 
-from .defaults import FILE_MASTER_DEFAULT, FILE_SECRETS_DEFAULT_JSON, STORE_SECRET, STORE_SECRET
+from .defaults import FILE_MASTER_DEFAULT, FILE_SECRETS_DEFAULT_JSON, STORE_SECRET
 
 
 class Cipher:

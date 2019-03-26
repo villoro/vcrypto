@@ -2,15 +2,15 @@
     Utility to storing password/secrets safely.
 
     You can save a secret using:
-        utils.save_secret("test_key", "my_super_secret_text")
+        utilities.save_secret("test_key", "my_super_secret_text")
 
     And then you can retrive it by:
-        value = utils.get_secret("test_key")
+        value = utilities.get_secret("test_key")
 
     In order to do that you'll need an environ var or a txt with the secret.
 
     To create a master password:
-        utils.create_password()
+        utilities.create_password()
 """
 
 import json
@@ -68,7 +68,7 @@ def store_dictionary(data, filename):
 
         # Check that yaml is installed
         try:
-            import yaml
+            import yaml  # pylint: disable=E0402
         except ImportError:
             raise ImportError("yaml module missing: you migh solve it with 'pip install pyyaml'")
 
@@ -91,7 +91,7 @@ def read_dictionary(filename):
 
         # Check that yaml is installed
         try:
-            import yaml
+            import yaml  # pylint: disable=E0402
         except ImportError:
             raise ImportError("yaml module missing: you migh solve it with 'pip install pyyaml'")
 
