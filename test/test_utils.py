@@ -19,6 +19,13 @@ class TestUtilities(unittest.TestCase):
         # Test invalid file
         self.assertIsNone(u.get_password(filename="imaginary_file.password"))
 
+        # Retrive from file
+        u.create_password(filename="test.password")
+        self.assertEqual(type(u.get_password(filename="test.password")), bytes)
+
+        # Retrive from env var
+        self.assertEqual(type(u.get_password(environ_var_name="SECRET_TEST")), bytes)
+
 
 if __name__ == "__main__":
     unittest.main()
