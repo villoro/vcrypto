@@ -3,10 +3,11 @@ from setuptools import setup
 
 setup(
     name="v_crypt",
-    version="1.0.1",
+    version="1.0.2",
     author="Arnau Villoro",
     author_email="arnau@villoro.com",
     packages=["v_crypt"],
+    install_requires=io.open("requirements.txt", encoding="utf-8").read().splitlines(),
     include_package_data=True,
     license="MIT",
     description=("Utility to easily store password/secrets."),
