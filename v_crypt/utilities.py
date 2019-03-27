@@ -58,7 +58,7 @@ def store_dictionary(data, filename):
             filename:   where to store the dictionary
     """
 
-    name, extension = filename.split(".")
+    extension = filename.split(".")[-1]
 
     # Store a json file
     if extension == "json":
@@ -81,7 +81,7 @@ def store_dictionary(data, filename):
 def read_dictionary(filename):
     """ Reads a dictionary. It can read 'json' and 'yaml' files """
 
-    name, extension = filename.split(".")
+    extension = filename.split(".")[-1]
 
     # Store a json file
     if extension == "json":
