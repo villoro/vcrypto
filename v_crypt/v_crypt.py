@@ -24,7 +24,12 @@ from .defaults import FILE_MASTER_DEFAULT, FILE_SECRETS_DEFAULT_JSON, STORE_SECR
 class Cipher:
     """docstring for ClassName"""
 
-    def __init__(self, **kwa):
+    def __init__(
+        self,
+        secrets_file=FILE_SECRETS_DEFAULT_JSON,
+        filename_master_password=FILE_MASTER_DEFAULT,
+        environ_var_name=None,
+    ):
         """
             Create a cipher instance
 
@@ -35,10 +40,9 @@ class Cipher:
         """
 
         # Save secrets filename
-        self.secrets_file = kwa.get("secrets_file", FILE_SECRETS_DEFAULT_JSON)
-
-        self.filename_master_password = kwa.get("filename_master_password", FILE_MASTER_DEFAULT)
-        self.environ_var_name = kwa.get("environ_var_name", None)
+        self.secrets_file = secrets_file
+        self.filename_master_password = filename_master_password
+        self.environ_var_name = environ_var_name
 
     def save_secret(self, key, value):
         """
@@ -81,4 +85,4 @@ class Cipher:
                 store_secret:   boolean to decide if master password should be stored in a file
         """
 
-        u.create_password(self.filename_master_password, store_secret)
+        return u.create_password(self.filename_master_password, store_secret)
