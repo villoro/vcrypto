@@ -98,7 +98,7 @@ def read_dictionary(filename):
             raise ImportError("yaml module missing: you migh solve it with 'pip install pyyaml'")
 
         with open(filename, encoding="utf-8") as file:
-            return yaml.load(file)
+            return yaml.load(file, Loader=yaml.SafeLoader)
 
 
 def save_secret(key, value, password=None, secrets_file=FILE_SECRETS_DEFAULT_JSON):
