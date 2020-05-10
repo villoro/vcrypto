@@ -8,11 +8,13 @@ def test_store_secret():
 
     assert create_password(filename="temp.password") is not None
 
+
 def test_encrypt():
     """ Test that is able to encrypt a secret """
 
     password = create_password(store_secret=False)
     encrypt("my_secret", password)
+
 
 def test_decrypt():
     """ Test that by encrypting and decrypting the string is not modified """

@@ -5,13 +5,13 @@ import pytest
 from vcrypto import utilities as u
 
 
-
 key = "secret"
 secret = "hello"
 
 mdict = {key: secret}
 
 file_secrets = "temp_secrets.json"
+
 
 def test_get_password():
     """ Test that is able to retrive a master password """
@@ -29,6 +29,7 @@ def test_get_password():
     # Retrive from env var
     assert type(u.get_password(environ_var_name="SECRET_TEST")) == bytes
 
+
 def test_dictionaries():
     """ Test read/write of dictionaries """
 
@@ -39,6 +40,7 @@ def test_dictionaries():
     # Test correct reading of yaml
     u.store_dictionary(mdict, "temp_secrets.yaml")
     u.read_dictionary("temp_secrets.yaml")
+
 
 def test_read_write():
     """ Test that is possible to read and write secrets """
