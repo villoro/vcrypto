@@ -1,6 +1,5 @@
 # Palette Material Design
 [![Build Status](https://travis-ci.com/villoro/v-crypt.svg?branch=master)](https://travis-ci.com/villoro/v-crypt)
-[![codecov](https://codecov.io/gh/villoro/v-crypt/branch/master/graph/badge.svg)](https://codecov.io/gh/villoro/v-crypt)
 
 Utility to easily store password/secrets. It uses `Fernet` from the [cryptography](https://cryptography.io/en/latest/) module instead of reinventing the wheel.
 
@@ -80,6 +79,26 @@ Then you can use it elsewhere with:
 import utilities as u
 
 u.get_secret("secret")
+```
+
+## Development
+
+This package relies on [poetry](https://villoro.com/post/poetry) and `pre-commit`. In order to develop you need to install both libraries with:
+
+```sh
+pip install poetry pre-commit
+poetry install
+pre-commit install
+```
+
+Then you need to add `poetry run` before any python shell command. For example:
+
+```sh
+# DO
+poetry run python master.py
+
+# don't do
+python master.py
 ```
 
 ## Authors
