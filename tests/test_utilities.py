@@ -27,6 +27,7 @@ def test_get_password():
     assert type(u.get_password(filename="test.password")) == bytes
 
     # Retrive from env var
+    os.environ["SECRET_TEST"] = "dummy_password"
     assert type(u.get_password(environ_var_name="SECRET_TEST")) == bytes
 
 
