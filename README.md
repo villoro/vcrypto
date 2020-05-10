@@ -82,6 +82,26 @@ import utilities as u
 u.get_secret("secret")
 ```
 
+## Development
+
+This package relies on [poetry](https://villoro.com/post/poetry) and `pre-commit`. In order to develop you need to install both libraries with:
+
+```sh
+pip install poetry pre-commit
+poetry install
+pre-commit install
+```
+
+Then you need to add `poetry run` before any python shell command. For example:
+
+```sh
+# DO
+poetry run python master.py
+
+# don't do
+python master.py
+```
+
 ## Authors
 * [Arnau Villoro](https://villoro.com)
 
