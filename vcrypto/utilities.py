@@ -13,11 +13,14 @@
         utilities.create_password()
 """
 
-import os
 import json
+import os
 
-from .encryption import encrypt, decrypt, create_password
-from .defaults import FILE_SECRETS_DEFAULT_JSON, FILE_MASTER_DEFAULT
+from .defaults import FILE_MASTER_DEFAULT
+from .defaults import FILE_SECRETS_DEFAULT_JSON
+from .encryption import create_password
+from .encryption import decrypt
+from .encryption import encrypt
 
 
 def get_password(filename=FILE_MASTER_DEFAULT, environ_var_name=None):
@@ -129,13 +132,14 @@ def save_secret(key, value, password=None, secrets_file=FILE_SECRETS_DEFAULT_JSO
     print(f"Secret '{key}' saved")
 
 
-def get_secret(key, password=None, secrets_file=FILE_SECRETS_DEFAULT_JSON):
+def get_secret(key, password=None, encoding="utf8", secrets_file=FILE_SECRETS_DEFAULT_JSON):
     """
         Retrives one secret from the json of secrets
 
         Args:
             key:            id of the secret
             password:       password for encryption, if non use SMA secret
+            encoding:       encoding to use for decoding bytes [if None returns bytes]
             secrets_file:   path of the file with secrets
     """
 
@@ -153,4 +157,4 @@ def get_secret(key, password=None, secrets_file=FILE_SECRETS_DEFAULT_JSON):
         print(f"Key '{key}' not found in {secrets_file}")
         return None
 
-    return decrypt(data[key], password)
+    return decrypt(data[key], password, encoding=encoding)
