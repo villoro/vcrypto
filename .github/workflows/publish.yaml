@@ -1,0 +1,33 @@
+name: Publish package
+env:
+  PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.7
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install poetry
+        poetry install --no-dev
+
+    - name: Build
+      run: |
+        poetry build
+
+    - name: Publish
+      run: |
+        poetry publish -u villoro -p $PYPI_PASSWORD

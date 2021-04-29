@@ -18,7 +18,9 @@
 
 from . import utilities as u
 
-from .defaults import FILE_MASTER_DEFAULT, FILE_SECRETS_DEFAULT_JSON, STORE_SECRET
+from .defaults import FILE_MASTER_DEFAULT
+from .defaults import FILE_SECRETS_DEFAULT_JSON
+from .defaults import STORE_SECRET
 
 
 class Cipher:
@@ -60,12 +62,13 @@ class Cipher:
             secrets_file=self.secrets_file,
         )
 
-    def get_secret(self, key):
+    def get_secret(self, key, encoding="utf8"):
         """
             Read one secret from the dict of secrets.
 
             Args:
-                key:    id of the secret
+                key:        id of the secret
+                encoding:   encoding to use for decoding bytes [if None returns bytes]
 
             Returns:
                 the secret as a string
@@ -75,6 +78,7 @@ class Cipher:
             key,
             password=u.get_password(self.filename_master_password, self.environ_var_name),
             secrets_file=self.secrets_file,
+            encoding=encoding,
         )
 
     def create_password(self, store_secret=STORE_SECRET):

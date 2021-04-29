@@ -15,7 +15,8 @@
 
 from cryptography.fernet import Fernet
 
-from .defaults import FILE_MASTER_DEFAULT, STORE_SECRET
+from .defaults import FILE_MASTER_DEFAULT
+from .defaults import STORE_SECRET
 
 
 def create_password(filename=FILE_MASTER_DEFAULT, store_secret=STORE_SECRET):
@@ -51,26 +52,38 @@ def encrypt(value, password):
         Encrypts a string using Fernet
 
         Args:
-            value:      what to encrypt [string]
+            value:      what to encrypt [string/bytes]
             password:   password to use [bytes]
 
         Returns:
             encrypted string
     """
 
-    return Fernet(password).encrypt(value.encode()).decode()
+    if type(value) != bytes:
+        value = value.encode()
+
+    return Fernet(password).encrypt(value).decode()
 
 
-def decrypt(value, password):
+def decrypt(value, password, encoding="utf8"):
     """
         Encrypts a string using Fernet
 
         Args:
-            value:      what to dencrypt [string]
+            value:      what to dencrypt [string/bytes]
             password:   password to use [bytes]
+            encoding:   encoding to use for decoding bytes [if None returns bytes]
 
         Returns:
             decrypted string
     """
 
-    return Fernet(password).decrypt(value.encode()).decode()
+    if type(value) != bytes:
+        value = value.encode()
+
+    out = Fernet(password).decrypt(value)
+
+    if encoding:
+        return out.decode(encoding)
+
+    return out
