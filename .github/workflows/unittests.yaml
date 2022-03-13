@@ -1,11 +1,11 @@
-name: Unittests
+name: CI
 
 on:
   pull_request:
     branches: [master, develop]
 
 jobs:
-  build:
+  unit_tests:
     runs-on: ubuntu-latest
 
     steps:
