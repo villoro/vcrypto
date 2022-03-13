@@ -3,7 +3,7 @@ line-length = 100
 
 [tool.poetry]
 name = "vcrypto"
-version = "2.1.0"
+version = "3.0.0"
 description = "Utility to easily store password/secrets"
 authors = ["Arnau Villoro <arnau@villoro.com>"]
 maintainers = ["Arnau Villoro <arnau@villoro.com>"]
@@ -23,7 +23,7 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.6.1"
-cryptography = "^2.9.2"
+cryptography = "^36.0.0"
 
 [tool.poetry.dev-dependencies]
 black = "^19.10b0"
