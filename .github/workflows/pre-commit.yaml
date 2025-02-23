@@ -7,7 +7,7 @@ on:
     - '**.py'
     - '**.yaml'
     - '**.yml'
-    branches: [master, develop]
+    branches: [main, master, develop]
 
 jobs:
   pre-commit:
