@@ -35,7 +35,7 @@ class Vcrypto:
     def get_secret(self, key, encoding="utf8"):
         """Retrieve a decrypted secret."""
         password = self._get_password()
-        return sm.get_secret(key, password, self.secrets_file, encoding=encoding)
+        return sm.get_secret(key, password, encoding, self.secrets_file)
 
     def create_password(self, store_secret=True):
         """Create and store a master password."""
