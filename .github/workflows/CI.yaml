@@ -24,5 +24,8 @@ jobs:
     - name: Install UV
       run: pip install uv
 
+    - name: Self install
+      run: uv pip install .
+
     - name: Run tests
       run: uv run pytest

@@ -2,9 +2,8 @@
 name = "vcrypto"
 version = "4.0.0"
 description = "Utility to easily store password/secrets"
-authors = ["Arnau Villoro <arnau@villoro.com>"]
-maintainers = ["Arnau Villoro <arnau@villoro.com>"]
-license = "MIT"
+authors = [{ name = "Arnau Villoro", email = "arnau@villoro.com" }]
+maintainers = [{ name = "Arnau Villoro", email = "arnau@villoro.com" }]
 readme = "README.md"
 requires-python = ">=3.8"
 dependencies = [

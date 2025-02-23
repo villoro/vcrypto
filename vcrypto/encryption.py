@@ -3,13 +3,9 @@ from typing import Union
 
 from cryptography.fernet import Fernet
 from loguru import logger
-from vcrypto.defaults import FILE_MASTER_DEFAULT
-from vcrypto.defaults import STORE_SECRET
 
 
-def create_password(
-    filename: str = FILE_MASTER_DEFAULT, store_secret: bool = STORE_SECRET
-) -> bytes:
+def create_password(filename="test.password", store_secret: bool = True) -> bytes:
     """
     Creates a new password and stores it in a text file.
     This approach is preferred over allowing users to create their own passwords:
@@ -28,11 +24,13 @@ def create_password(
 
     logger.info("Key generated. Remember to store it in a secure place.")
 
-    if store_secret:
-        with open(filename, "w") as file:
-            file.write(key.decode())
+    if not store_secret:
+        return key
 
-        logger.info(f"Key stored in {filename}. Remember to gitignore this file!")
+    logger.info(f"Storing key to {filename=}. Remember to gitignore this file!")
+
+    with open(filename, "w") as file:
+        file.write(key.decode())
 
     return key
 
