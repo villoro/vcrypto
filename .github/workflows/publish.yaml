@@ -4,10 +4,8 @@ permissions:
   id-token: write
 
 on:
-  # push:
-  #   branches: [main]
-
-  pull_request:
+  push:
+    branches: [main]
 
 jobs:
   publish_pypi:
