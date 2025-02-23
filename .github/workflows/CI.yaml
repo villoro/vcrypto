@@ -24,11 +24,5 @@ jobs:
     - name: Install UV
       run: pip install uv
 
-    - name: Set up virtual environment
-      run: uv venv --python=3.12 .venv
-
-    - name: Install dependencies
-      run: uv pip install --no-dev
-
     - name: Run tests
       run: uv run pytest
