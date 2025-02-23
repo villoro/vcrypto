@@ -6,9 +6,8 @@ from utils import set_output
 
 @click.command()
 @click.option("--name")
-@click.option("--project", default="dbt", help="'dbt' or 'docker'")
-def export_version(name, project):
-    version = get_version_from_toml(project)
+def export_version(name):
+    version = get_version_from_toml()
     logger.info(f"'{name}' branch {version=}")
 
     set_output(f"VERSION_{name.upper()}", version)
