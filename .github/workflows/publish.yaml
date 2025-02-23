@@ -3,8 +3,10 @@ env:
   PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
 
 on:
-  push:
-    branches: [main]
+  # push:
+  #   branches: [main]
+
+  pull_request:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -29,4 +31,4 @@ jobs:
       run: uv build
 
     - name: Publish
-      run: uv publish
+      run: uv publish -u villoro -p $PYPI_PASSWORD
