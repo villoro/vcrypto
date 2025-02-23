@@ -27,7 +27,7 @@ jobs:
         uses: actions/setup-python@v4
 
       - name: Install requirements
-        run: pip install toml loguru click pyyaml
+        run: pip install toml loguru click pyyaml packaging
 
       # Get version from main
       - name: Checkout main

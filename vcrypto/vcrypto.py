@@ -1,3 +1,5 @@
+from os import path
+
 from loguru import logger
 
 from vcrypto import encryption
@@ -69,6 +71,12 @@ def get_secret(key, encoding="utf8"):
     return _VCRYPTO.get_secret(key, encoding)
 
 
+def read_secret(key, encoding="utf8"):
+    """Global function to retrieve a secret."""
+    Vcrypto._check_vcrypto()
+    return _VCRYPTO.get_secret(key, encoding)
+
+
 def save_secret(key, value):
     """Global function to store a secret."""
     Vcrypto._check_vcrypto()
@@ -79,3 +87,19 @@ def create_password(store_secret=True):
     """Global function to create a master password."""
     Vcrypto._check_vcrypto()
     return _VCRYPTO.create_password(store_secret)
+
+
+def export_secret(uri, secret_name, binary=False):
+    """Export a secret from secrets.yaml"""
+
+    logger.debug(f"Exporting {secret_name=} to {uri=}")
+
+    if path.exists(uri):
+        logger.info(f"Skipping secret export since {uri=} already exists")
+        return False
+
+    secret = read_secret(secret_name, encoding="utf8" if not binary else None)
+
+    logger.info(f"Writing {secret_name=} to {uri=}")
+    with open(uri, "wb" if binary else "w") as stream:
+        stream.write(secret)
