@@ -69,6 +69,12 @@ def get_secret(key, encoding="utf8"):
     return _VCRYPTO.get_secret(key, encoding)
 
 
+def read_secret(key, encoding="utf8"):
+    """Global function to retrieve a secret."""
+    Vcrypto._check_vcrypto()
+    return _VCRYPTO.get_secret(key, encoding)
+
+
 def save_secret(key, value):
     """Global function to store a secret."""
     Vcrypto._check_vcrypto()
