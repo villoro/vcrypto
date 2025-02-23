@@ -5,6 +5,7 @@ description = "Utility to easily store password/secrets"
 authors = [{ name = "Arnau Villoro", email = "arnau@villoro.com" }]
 maintainers = [{ name = "Arnau Villoro", email = "arnau@villoro.com" }]
 readme = "README.md"
+license = { file = "LICENSE.txt" }
 requires-python = ">=3.8"
 dependencies = [
     "cryptography>=44.0.1",
