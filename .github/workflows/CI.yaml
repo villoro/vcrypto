@@ -20,12 +20,19 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
 
     - name: Install UV
       run: pip install uv
 
-    - name: Self install
-      run: uv pip install .
+    - name: Set up virtual environment
+      run: uv venv --python=3.11 .venv
+
+    - name: Install package in editable mode
+      run: uv pip install --editable .
 
     - name: Run tests
-      run: uv run pytest
+      run: |
+        source .venv/bin/activate
+        pytest .
