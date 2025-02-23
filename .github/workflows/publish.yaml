@@ -1,4 +1,4 @@
-name: Publish package
+name: Publish
 env:
   PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
 
@@ -6,8 +6,12 @@ on:
   push:
     branches: [main]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  build:
+  publish_pypi:
     runs-on: ubuntu-latest
 
     steps:
