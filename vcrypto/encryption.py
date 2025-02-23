@@ -1,89 +1,79 @@
-"""
-    Encrypt/Decrypt functions using Fernet.
-
-    You can encrypt a string with:
-        encryption.encrypt("secret", key)
-
-    And then you can decrypt it with:
-        value = encryption.decrypt(crypted_string, key)
-
-    In order to do that you'll need an environ var or a txt with the secret.
-    
-    To create a master password:
-        encryption.create_password()
-"""
+from typing import Optional
+from typing import Union
 
 from cryptography.fernet import Fernet
-
-from .defaults import FILE_MASTER_DEFAULT
-from .defaults import STORE_SECRET
+from loguru import logger
 
 
-def create_password(filename=FILE_MASTER_DEFAULT, store_secret=STORE_SECRET):
+def create_password(filename="test.password", store_secret: bool = True) -> bytes:
     """
-        Creates a new password and stores the password in a text file.
-        It is better than allowing the user to create the password:
-            https://stackoverflow.com/a/55147077/3488853
+    Creates a new password and stores it in a text file.
+    This approach is preferred over allowing users to create their own passwords:
+        https://stackoverflow.com/a/55147077/3488853
 
-        Args:
-            filename:       name of the file where to store the master password
-            store_secret:   if true store the secret in a file
+    Args:
+        filename: Name of the file where the master password will be stored.
+        store_secret: If True, stores the secret in a file.
 
-        Returns:
-            master password
+    Returns:
+        Generated master password as bytes.
     """
 
-    # Create a new key and transform it to string
+    # Create a new key
     key = Fernet.generate_key()
 
-    print("Key generated. Remember to store it in a secure place.")
+    logger.info("Key generated. Remember to store it in a secure place.")
 
-    if store_secret:
-        with open(filename, "w") as file:
-            file.write(key.decode())
+    if not store_secret:
+        return key
 
-        print(f"Key stored in {filename}. Remember to gitignore this file!")
+    logger.info(f"Storing key to {filename=}. Remember to gitignore this file!")
+
+    with open(filename, "w") as file:
+        file.write(key.decode())
 
     return key
 
 
-def encrypt(value, password):
+def encrypt(value: Union[str, bytes], password: bytes) -> str:
     """
-        Encrypts a string using Fernet
+    Encrypts a string or bytes using Fernet.
 
-        Args:
-            value:      what to encrypt [string/bytes]
-            password:   password to use [bytes]
+    Args:
+        value: The data to encrypt (string or bytes).
+        password: The password used for encryption (must be bytes).
 
-        Returns:
-            encrypted string
+    Returns:
+        The encrypted string.
     """
 
-    if type(value) != bytes:
+    if not isinstance(value, bytes):
         value = value.encode()
 
     return Fernet(password).encrypt(value).decode()
 
 
-def decrypt(value, password, encoding="utf8"):
+def decrypt(
+    value: Union[str, bytes], password: bytes, encoding: Optional[str] = "utf-8"
+) -> Union[str, bytes]:
     """
-        Encrypts a string using Fernet
+    Decrypts an encrypted string using Fernet.
 
-        Args:
-            value:      what to dencrypt [string/bytes]
-            password:   password to use [bytes]
-            encoding:   encoding to use for decoding bytes [if None returns bytes]
+    Args:
+        value: The encrypted data (string or bytes).
+        password: The password used for decryption (must be bytes).
+        encoding: The encoding to use for decoding bytes (if None, returns bytes).
 
-        Returns:
-            decrypted string
+    Returns:
+        The decrypted string or bytes if encoding is None.
     """
 
-    if type(value) != bytes:
+    if not isinstance(value, bytes):
         value = value.encode()
 
-    out = Fernet(password).decrypt(value)
+    decrypted_bytes = Fernet(password).decrypt(value)
 
     if encoding:
-        return out.decode(encoding)
+        return decrypted_bytes.decode(encoding)
 
-    return out
+    return decrypted_bytes
