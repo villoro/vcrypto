@@ -19,8 +19,9 @@ jobs:
         with:
           filters: |
             code:
-              - 'dbt_northius/**'
-              - 'poetry.lock'
+              - 'vcrypto/**'
+              - 'uv.lock'
+              - 'pyproject.toml'
 
       - name: Set up python
         uses: actions/setup-python@v4
@@ -48,9 +49,6 @@ jobs:
       - name: Get current version
         if: steps.changes.outputs.code == 'true'
         run: python .github/scripts/get_version.py --name=current
-
-      - name: Validate that versions match
-        run: python .github/scripts/validate_versions.py
 
       # Checks if version needs updating
       - name: Check if version needs to be updated

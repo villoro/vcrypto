@@ -1,11 +1,28 @@
 [project]
 name = "vcrypto"
-version = "4.0.0"
-description = "Utility to easily store password/secrets"
+version = "4.0.1"
+description = "Utility to easily store passwords/secrets"
 authors = [{ name = "Arnau Villoro", email = "arnau@villoro.com" }]
 maintainers = [{ name = "Arnau Villoro", email = "arnau@villoro.com" }]
 readme = "README.md"
+license = { text = "MIT" }
 requires-python = ">=3.8"
+
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Topic :: Security",
+    "Topic :: Utilities",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
 dependencies = [
     "cryptography>=44.0.1",
     "loguru>=0.7.3",
