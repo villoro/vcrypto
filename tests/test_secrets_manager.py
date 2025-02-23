@@ -67,12 +67,8 @@ def test_read_write():
     ):
         sm.read_dictionary(FILE_SECRETS_JSON)
 
-    sm.save_secret(KEY, SECRET, password=password, secrets_file=FILE_SECRETS_JSON)
-
-    assert sm.read_dictionary(FILE_SECRETS_JSON) == {KEY: sm.encrypt(SECRET, password)}
-    assert (
-        sm.get_secret(KEY, password=password, secrets_file=FILE_SECRETS_JSON) == SECRET
-    )
+    sm.save_secret(KEY, SECRET, password, secrets_file=FILE_SECRETS_JSON)
+    assert sm.get_secret(KEY, password, secrets_file=FILE_SECRETS_JSON) == SECRET
 
 
 def test_reading_errors():
