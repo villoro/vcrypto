@@ -21,6 +21,7 @@ jobs:
             code:
               - 'vcrypto/**'
               - 'uv.lock'
+              - 'pyproject.toml'
 
       - name: Set up python
         uses: actions/setup-python@v4
