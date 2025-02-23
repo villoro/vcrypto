@@ -1,5 +1,6 @@
 import json
 import os
+from pathlib import Path
 
 import yaml
 from loguru import logger
@@ -7,140 +8,136 @@ from loguru import logger
 from vcrypto.encryption import decrypt
 from vcrypto.encryption import encrypt
 
-
+# Default file names
 FILE_MASTER_DEFAULT = "master.password"
 FILE_SECRETS_DEFAULT = "secrets.yaml"
 
 
 def get_password(filename=FILE_MASTER_DEFAULT, environ_var_name=None):
     """
-    Retrives master password. By default it is read from a file.
-    If can also be retrived from as environment var
+    Retrieves the master password. By default, it reads from a file.
+    It can also be retrieved from an environment variable.
 
     Args:
-        filaname:           name of the file with the master password
-        environ_var_name:   name of the environ variable where the master password is
+        filename (str): Name of the file containing the master password.
+        environ_var_name (str): Environment variable name storing the password.
+
+    Returns:
+        bytes: The password, or None if not found.
     """
-
-    # If there is an environ variable use it instead of reading the file with secret
-
-    if environ_var_name is not None:
-        password = os.environ.get(environ_var_name, None)
-
-        if password is None:
-            logger.info(f"Environ variable {environ_var_name} does not exist")
-            return None
-
-        return password.encode()
-
-    try:
-        with open(filename, "r") as file:
-            return file.read().replace("\n", "").encode()
-
-    except IOError:
-        logger.error(f"File {filename} with secret not found")
+    if environ_var_name:
+        password = os.getenv(environ_var_name)
+        if password:
+            return password.encode()
+        logger.error(f"Environment variable {environ_var_name} not found")
         return None
+
+    path = Path(filename)
+    if path.exists():
+        return path.read_text().strip().encode()
+
+    logger.error(f"{filename=} not found")
+    return None
+
+
+def _is_json(path):
+    valid_extensions = {"json", "yaml", "yml"}
+    extension = path.suffix.lstrip(".")
+
+    assert extension in valid_extensions, f"{extension=} must be in {valid_extensions=}"
+
+    return extension == "json"
 
 
 def store_dictionary(data, filename):
     """
-    Stores a dictionary in a file. It can store 'json' and 'yaml' files.
+    Stores a dictionary in a JSON or YAML file.
 
     Args:
-        data:       dictionary to store
-        filename:   where to store the dictionary
+        data (dict): Dictionary to store.
+        filename (str): Destination file.
     """
 
-    extension = filename.split(".")[-1]
+    path = Path(filename)
 
-    # Store a json
-    if extension == "json":
-        with open(filename, "w") as file:
-            json.dump(data, file, indent=2)
-
-    # Store a yaml
-    elif extension in {"yml", "yaml"}:
-        with open(filename, "w") as file:
-            yaml.dump(data, file)
+    if _is_json(path):
+        text = json.dumps(data, indent=2)
 
     else:
-        raise ValueError(f'{extension=} must be one of ["yaml", "yml", "json"]')
+        text = yaml.dump(data)
+
+    path.write_text(text, encoding="utf-8")
 
 
 def read_dictionary(filename):
-    """Reads a dictionary. It can read 'json' and 'yaml' files"""
+    """
+    Reads a dictionary from a JSON or YAML file.
 
-    extension = filename.split(".")[-1]
+    Args:
+        filename (str): File to read.
 
-    # Read from a json
-    if extension == "json":
-        with open(filename, "r") as file:
-            return json.load(file)
+    Returns:
+        dict: Parsed dictionary.
+    """
+    path = Path(filename)
 
-    # Read from a yaml
-    elif extension in {"yml", "yaml"}:
-        with open(filename, encoding="utf-8") as file:
-            return yaml.load(file, Loader=yaml.SafeLoader)
+    if not path.exists():
+        raise ValueError(f"{filename=} does not exist")
 
+    content = path.read_text(encoding="utf-8")
+
+    if _is_json(path):
+        return json.loads(content)
     else:
-        raise ValueError(f'{extension=} must be one of ["yaml", "yml", "json"]')
+        return yaml.safe_load(content)
 
 
 def save_secret(key, value, password=None, secrets_file=FILE_SECRETS_DEFAULT):
     """
-    Add one secret in the json of secrets. It will create the json if needed
+    Adds a secret to the encrypted secrets file.
 
     Args:
-        key:            id of the secret
-        value:          what to store
-        password:       password for encryption, if non use SMA secret
-        secrets_file:   path of the file with secrets
+        key (str): Identifier for the secret.
+        value (str): Value to store.
+        password (bytes, optional): Encryption password. Defaults to master password.
+        secrets_file (str): Path to the secrets file.
     """
+    logger.debug(f"Storing secret {key=}")
 
-    logger.info(f"Storing secret {key=}")
-
+    password = password or get_password()
     if password is None:
-        password = get_password()
+        raise ValueError("No password found. Cannot save secret")
 
-    # Create an empty dict if file not found
-    try:
-        data = read_dictionary(secrets_file)
-
-    except FileNotFoundError:
-        data = {}
-
+    data = read_dictionary(secrets_file)
     data[key] = encrypt(value, password)
 
     store_dictionary(data, secrets_file)
+    logger.debug(f"Secret {key=} saved")
 
-    logger.info(f"Secret {key=} saved")
 
-
-def get_secret(key, password=None, encoding="utf8", secrets_file=FILE_SECRETS_DEFAULT):
+def get_secret(key, password=None, encoding="utf-8", secrets_file=FILE_SECRETS_DEFAULT):
     """
-    Retrives one secret from the json of secrets
+    Retrieves a secret from the encrypted secrets file.
 
     Args:
-        key:            id of the secret
-        password:       password for encryption, if non use SMA secret
-        encoding:       encoding to use for decoding bytes [if None returns bytes]
-        secrets_file:   path of the file with secrets
+        key (str): Identifier of the secret.
+        password (bytes, optional): Decryption password. Defaults to master password.
+        encoding (str, optional): Encoding for the decrypted value. Defaults to "utf-8".
+        secrets_file (str): Path to the secrets file.
+
+    Returns:
+        str | bytes | None: The decrypted value, or None if not found.
     """
+    logger.debug(f"Reading secret {key=}")
 
-    logger.info(f"Reading secret {key=}")
-
+    password = password or get_password()
     if password is None:
-        password = get_password()
+        raise ValueError("No password found. Cannot save secret")
 
-    # Create an empty dict if file not found
-    try:
-        data = read_dictionary(secrets_file)
-
-    except FileNotFoundError:
-        data = {}
-
+    data = read_dictionary(secrets_file)
     if key not in data:
-        logger.warning(f"Key '{key}' not found in {secrets_file}")
-        return None
+        raise ValueError(f"Secret '{key}' not found in {secrets_file}")
 
-    return decrypt(data[key], password, encoding=encoding)
+    out = decrypt(data[key], password, encoding)
+    logger.debug(f"Secret {key=} read")
+    return out
