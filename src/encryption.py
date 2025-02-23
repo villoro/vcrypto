@@ -2,9 +2,9 @@ from typing import Optional
 from typing import Union
 
 from cryptography.fernet import Fernet
-
-from .defaults import FILE_MASTER_DEFAULT
-from .defaults import STORE_SECRET
+from loguru import logger
+from vcrypto.defaults import FILE_MASTER_DEFAULT
+from vcrypto.defaults import STORE_SECRET
 
 
 def create_password(
@@ -26,13 +26,13 @@ def create_password(
     # Create a new key
     key = Fernet.generate_key()
 
-    print("Key generated. Remember to store it in a secure place.")
+    logger.info("Key generated. Remember to store it in a secure place.")
 
     if store_secret:
         with open(filename, "w") as file:
             file.write(key.decode())
 
-        print(f"Key stored in {filename}. Remember to gitignore this file!")
+        logger.info(f"Key stored in {filename}. Remember to gitignore this file!")
 
     return key
 

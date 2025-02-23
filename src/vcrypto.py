@@ -1,7 +1,7 @@
-from . import utilities as u
-from .defaults import FILE_MASTER_DEFAULT
-from .defaults import FILE_SECRETS_DEFAULT_JSON
-from .defaults import STORE_SECRET
+from vcrypto import utilities as u
+from vcrypto.defaults import FILE_MASTER_DEFAULT
+from vcrypto.defaults import FILE_SECRETS_DEFAULT_JSON
+from vcrypto.defaults import STORE_SECRET
 
 
 class Cipher:

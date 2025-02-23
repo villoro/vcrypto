@@ -1,10 +1,12 @@
 import json
 import os
 
-from .defaults import FILE_MASTER_DEFAULT
-from .defaults import FILE_SECRETS_DEFAULT_JSON
-from .encryption import decrypt
-from .encryption import encrypt
+import yaml
+from loguru import logger
+from vcrypto.defaults import FILE_MASTER_DEFAULT
+from vcrypto.defaults import FILE_SECRETS_DEFAULT_JSON
+from vcrypto.encryption import decrypt
+from vcrypto.encryption import encrypt
 
 
 def get_password(filename=FILE_MASTER_DEFAULT, environ_var_name=None):
@@ -22,7 +24,7 @@ def get_password(filename=FILE_MASTER_DEFAULT, environ_var_name=None):
         password = os.environ.get(environ_var_name, None)
 
         if password is None:
-            print(f"Environ variable {environ_var_name} does not exist")
+            logger.info(f"Environ variable {environ_var_name} does not exist")
             return None
 
         return password.encode()
@@ -32,7 +34,7 @@ def get_password(filename=FILE_MASTER_DEFAULT, environ_var_name=None):
             return file.read().replace("\n", "").encode()
 
     except IOError:
-        print(f"File {filename} with secret not found")
+        logger.error(f"File {filename} with secret not found")
         return None
 
 
@@ -54,14 +56,6 @@ def store_dictionary(data, filename):
 
     # Store a yaml
     if extension in ["yml", "yaml"]:
-        # Check that yaml is installed
-        try:
-            import yaml
-        except ImportError:
-            raise ImportError(
-                "yaml module missing: you migh solve it with 'pip install pyyaml'"
-            )
-
         with open(filename, "w") as file:
             yaml.dump(data, file)
 
@@ -78,14 +72,6 @@ def read_dictionary(filename):
 
     # Store a yaml
     if extension in ["yml", "yaml"]:
-        # Check that yaml is installed
-        try:
-            import yaml
-        except ImportError:
-            raise ImportError(
-                "yaml module missing: you migh solve it with 'pip install pyyaml'"
-            )
-
         with open(filename, encoding="utf-8") as file:
             return yaml.load(file, Loader=yaml.SafeLoader)
 
@@ -115,7 +101,7 @@ def save_secret(key, value, password=None, secrets_file=FILE_SECRETS_DEFAULT_JSO
 
     store_dictionary(data, secrets_file)
 
-    print(f"Secret '{key}' saved")
+    logger.info(f"Secret '{key}' saved")
 
 
 def get_secret(
@@ -142,7 +128,7 @@ def get_secret(
         data = {}
 
     if key not in data:
-        print(f"Key '{key}' not found in {secrets_file}")
+        logger.warning(f"Key '{key}' not found in {secrets_file}")
         return None
 
     return decrypt(data[key], password, encoding=encoding)
