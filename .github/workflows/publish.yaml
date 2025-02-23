@@ -1,16 +1,13 @@
 name: Publish
-env:
-  PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+
+permissions:
+  id-token: write
 
 on:
   # push:
   #   branches: [main]
 
   pull_request:
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
 
 jobs:
   publish_pypi:
@@ -31,4 +28,4 @@ jobs:
       run: uv build
 
     - name: Publish
-      run: uv publish -u villoro -p $PYPI_PASSWORD
+      run: uv publish
