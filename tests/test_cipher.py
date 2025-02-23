@@ -1,5 +1,3 @@
-import pytest
-
 from vcrypto.vcrypto import Cipher
 
 
@@ -10,14 +8,14 @@ cipher = Cipher(secrets_file=secrets_file, filename_master_password=master_passw
 
 
 def test_save_secret():
-    """ Test that is able to store a secret """
+    """Test that is able to store a secret"""
 
     cipher.create_password(store_secret=True)
     cipher.save_secret("secret", "hello")
 
 
 def test_read_secret():
-    """ Test read/write of dictionaries """
+    """Test read/write of dictionaries"""
 
     key = "secret"
     secret = "hello"
@@ -29,7 +27,7 @@ def test_read_secret():
 
 
 def test_read_secret_bytes():
-    """ Test read/write of dictionaries as bytes """
+    """Test read/write of dictionaries as bytes"""
 
     key = "secret"
     secret = b"\x80\x03cgoogle"

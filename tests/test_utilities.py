@@ -1,7 +1,5 @@
 import os
 
-import pytest
-
 from vcrypto import utilities as u
 
 
@@ -14,7 +12,7 @@ file_secrets = "temp_secrets.json"
 
 
 def test_get_password():
-    """ Test that is able to retrive a master password """
+    """Test that it is able to retrieve a master password."""
 
     # Test invalid environ var
     assert u.get_password(environ_var_name="imaginary_env_var") is None
@@ -22,17 +20,17 @@ def test_get_password():
     # Test invalid file
     assert u.get_password(filename="imaginary_file.password") is None
 
-    # Retrive from file
+    # Retrieve from file
     u.create_password(filename="test.password")
-    assert type(u.get_password(filename="test.password")) == bytes
+    assert isinstance(u.get_password(filename="test.password"), bytes)
 
-    # Retrive from env var
+    # Retrieve from env var
     os.environ["SECRET_TEST"] = "dummy_password"
-    assert type(u.get_password(environ_var_name="SECRET_TEST")) == bytes
+    assert isinstance(u.get_password(environ_var_name="SECRET_TEST"), bytes)
 
 
 def test_dictionaries():
-    """ Test read/write of dictionaries """
+    """Test read/write of dictionaries"""
 
     # Test correct reading of json
     u.store_dictionary(mdict, file_secrets)
@@ -44,7 +42,7 @@ def test_dictionaries():
 
 
 def test_read_write():
-    """ Test that is possible to read and write secrets """
+    """Test that is possible to read and write secrets"""
 
     password = u.create_password(store_secret=False)
 
@@ -60,7 +58,7 @@ def test_read_write():
 
 
 def test_reading_errors():
-    """ Test that it handles reading errors """
+    """Test that it handles reading errors"""
 
     password = u.create_password(store_secret=False)
 

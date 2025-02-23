@@ -1,5 +1,3 @@
-import pytest
-
 from vcrypto import __version__
 
 
