@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 
 from vcrypto import secrets_manager as sm
-
+from vcrypto.encryption import create_password
 
 KEY = "secret"
 SECRET = "hello"
@@ -12,6 +12,7 @@ MDICT = {KEY: SECRET}
 FILE_SECRETS_JSON = "temp_secrets.json"
 FILE_SECRETS_YAML = "temp_secrets.yaml"
 FILE_MASTER_PASSWORD = "test_master.password"
+FILE_FAKE = "secrets_imaginary.json"
 
 
 @pytest.fixture(scope="function", autouse=True)
@@ -34,7 +35,7 @@ def test_get_password(monkeypatch):
         sm.get_password(filename="imaginary_file.password")
 
     # Retrieve from file
-    sm.create_password(filename=FILE_MASTER_PASSWORD)
+    create_password(filename=FILE_MASTER_PASSWORD)
     assert isinstance(sm.get_password(filename=FILE_MASTER_PASSWORD), bytes)
 
     # Retrieve from environment variable
@@ -56,13 +57,19 @@ def test_dictionaries():
 
 def test_read_write():
     """Test storing and retrieving secrets."""
-    password = sm.create_password(store_secret=False)
+    password = create_password(store_secret=False)
 
-    # Save secret twice (ensuring no overwrite issues)
-    sm.save_secret(KEY, SECRET, password=password, secrets_file=FILE_SECRETS_JSON)
+    # Ensure the file does not exist before testing
+    Path(FILE_SECRETS_JSON).unlink(missing_ok=True)
+
+    with pytest.raises(
+        ValueError, match=f"filename='{FILE_SECRETS_JSON}' does not exist"
+    ):
+        sm.read_dictionary(FILE_SECRETS_JSON)
+
     sm.save_secret(KEY, SECRET, password=password, secrets_file=FILE_SECRETS_JSON)
 
-    # Retrieve secret
+    assert sm.read_dictionary(FILE_SECRETS_JSON) == {KEY: sm.encrypt(SECRET, password)}
     assert (
         sm.get_secret(KEY, password=password, secrets_file=FILE_SECRETS_JSON) == SECRET
     )
@@ -70,9 +77,6 @@ def test_read_write():
 
 def test_reading_errors():
     """Test handling of missing secrets file."""
-    password = sm.create_password(store_secret=False)
 
-    with pytest.raises(
-        ValueError, match="Secret 'secret' not found in secrets_imaginary.json"
-    ):
-        sm.get_secret(KEY, password, secrets_file="secrets_imaginary.json")
+    with pytest.raises(ValueError, match=f"filename='{FILE_FAKE}' does not exist"):
+        sm.read_dictionary(FILE_FAKE)

@@ -74,7 +74,7 @@ def store_dictionary(data: dict, filename: str):
     path.write_text(content, encoding="utf-8")
 
 
-def read_dictionary(filename: str) -> dict:
+def read_dictionary(filename: str, fail_if_missing=True) -> dict:
     """
     Reads a dictionary from a JSON or YAML file.
 
@@ -86,7 +86,10 @@ def read_dictionary(filename: str) -> dict:
     """
     path = Path(filename)
     if not path.exists():
-        return ValueError(f"{filename=} does not exist")
+        if fail_if_missing:
+            raise ValueError(f"{filename=} does not exist")
+
+        return {}
 
     content = path.read_text(encoding="utf-8")
     return json.loads(content) if _is_json(path) else yaml.safe_load(content)
@@ -107,7 +110,7 @@ def save_secret(
     logger.debug(f"Storing secret: {key}")
     password = password or get_password()
 
-    data = read_dictionary(secrets_file)
+    data = read_dictionary(secrets_file, fail_if_missing=False)
     data[key] = encrypt(value, password)
 
     store_dictionary(data, secrets_file)
