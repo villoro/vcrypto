@@ -26,6 +26,9 @@ jobs:
     - name: Install UV
       run: pip install uv
 
+    - name: Set up virtual environment
+      run: uv venv .venv
+
     - name: Install package in editable mode
       run: uv pip install --editable .
 
