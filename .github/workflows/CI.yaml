@@ -36,4 +36,4 @@ jobs:
   check_version:
     runs-on: ubuntu-latest
     steps:
-      uses: vhooks/check_version@0.1.0
+    -  uses: vhooks/check_version@0.1.0
