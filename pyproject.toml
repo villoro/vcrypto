@@ -1,6 +1,6 @@
 [project]
 name = "vcrypto"
-version = "4.2.0"
+version = "4.2.1"
 description = "Utility to easily store passwords/secrets"
 authors = [{ name = "Arnau Villoro", email = "arnau@villoro.com" }]
 maintainers = [{ name = "Arnau Villoro", email = "arnau@villoro.com" }]
