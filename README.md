@@ -37,6 +37,10 @@ from vcrypto import init_vcrypto
 
 init_vcrypto(secrets_file="secrets.yaml", environ_var_name="MY_ENV_VAR")
 ```
+
+> [!TIP]
+> You only need to initialize it **once**.
+
 This ensures `vcrypto` knows where to store secrets and how to retrieve the master password.
 
 ### **2️⃣ Store and Retrieve Secrets**
