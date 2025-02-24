@@ -51,7 +51,7 @@ class Vcrypto:
 
 
 def init_vcrypto(
-    secrets_file="secrets.json",
+    secrets_file="secrets.yaml",
     filename_master_password="master.password",
     environ_var_name=None,
 ):
@@ -66,12 +66,6 @@ def init_vcrypto(
 
 
 def get_secret(key, encoding="utf8"):
-    """Global function to retrieve a secret."""
-    Vcrypto._check_vcrypto()
-    return _VCRYPTO.get_secret(key, encoding)
-
-
-def read_secret(key, encoding="utf8"):
     """Global function to retrieve a secret."""
     Vcrypto._check_vcrypto()
     return _VCRYPTO.get_secret(key, encoding)
@@ -98,7 +92,7 @@ def export_secret(uri, secret_name, binary=False):
         logger.info(f"Skipping secret export since {uri=} already exists")
         return False
 
-    secret = read_secret(secret_name, encoding="utf8" if not binary else None)
+    secret = get_secret(secret_name, encoding="utf8" if not binary else None)
 
     logger.info(f"Writing {secret_name=} to {uri=}")
     with open(uri, "wb" if binary else "w") as stream:
