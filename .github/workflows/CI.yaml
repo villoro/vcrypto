@@ -32,3 +32,8 @@ jobs:
 
     - name: Run tests
       run: uv run pytest .
+
+  check_version:
+    runs-on: ubuntu-latest
+    steps:
+      uses: vhooks/check_version@0.1.0
