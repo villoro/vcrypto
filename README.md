@@ -1,106 +1,97 @@
-# Palette Material Design
-Utility to easily store password/secrets. It uses `Fernet` from the [cryptography](https://cryptography.io/en/latest/) module instead of reinventing the wheel.
+# **vcrypto - Secure Secrets Management in Python**
+vcrypto is a simple and effective utility for securely storing passwords and secrets in Python. It leverages **Fernet encryption** from the [cryptography](https://cryptography.io/en/latest/) module instead of reinventing the wheel.
 
-Fernet is a symmetric encryption that uses 128-bit AES in CBC mode and PKCS7 padding with HMAC using SHA256 for authentication. You can read more about it [here](https://medium.com/coinmonks/if-youre-struggling-picking-a-crypto-suite-fernet-may-be-the-answer-95196c0fec4b).
+## **🔒 Why vcrypto?**
+Managing secrets in Python, especially in collaborative projects, can be cumbersome. Our approach simplifies it:
 
-## Why vcrypto?
-It is always annoying to deal with secrets and passwords in python especially if you work with other people. What we found that worked best for us was:
+👉 **One master private password** (ignored in Git)\
+👉 **A structured dictionary file with encrypted secrets**\
+👉 **Easily shareable** - only the master password needs to be exchanged once\
+👉 **Version-controlled secrets** - since only encrypted values are stored
 
-* Create one master private password (ignored from git)
-* Have dict-like file with the rest of passwords encrypted
+This package makes it easy to **store and retrieve encrypted secrets** in **JSON** or **YAML** formats.
 
-This module provides the class `Cipher` to handle that easily.
+---
 
-The idea behind this module is to be able to **create a `json` or `yaml` with encrypted secrets**. The keys will be public but the values won't. This way you can **store the dictionary of secrets in git** and easily share them with other people working in the same project. You will only need to **share the `master.password` once**. And all the other passwords/secrets will be tracked with git.
+## **📌 Features**
+- 🔐 **AES-128 Encryption** (Fernet) for secure storage.
+- 📂 **JSON/YAML Support** for structured secret storage.
+- 🛠️ **Environment Variable Support** for flexible key management.
+- 🔑 **Simple API** for saving and retrieving secrets.
 
-## Installation
+---
 
-You can install it with pip by running:
-
-    pip install vcrypto
-
-## Usage
-
-```python
-from vcrypto import Cipher
-
-# Create a cipher instance
-cipher = Cipher()
-
-# Create a new master password
-cipher.create_password()
-
-# Store a secret
-cipher.save_secret("secret", "I like python")
-
-# Retrive a secret
-cipher.get_secret("secret")
-```
-
-### Customization
-
-There are three paramaters to customize the cipher:
-
-1. **secrets_file:** path of the file with secrets. Can be a `json` or `yaml`.
-2. **filename_master_password:** path of the file with the master password
-3. **environ_var_name:** if passed it allows to read the master password from an environ var.
-
-> For `yaml` you need to install `pyyaml`
-
-For example you could do:
-
-```python
-cipher = Cipher(secrets_file="data/secrets.yaml", filename_master_password="data/master.secret")
-```
-
-This will allow you to store both the `master.password` and `secrets.yaml` in the folder `data`.
-
-There is not much more customization since the idea is to keep it simple.
-
-### Integrating it in other projects
-We usually have one or more python files with utilities, for example `utilities.py`.
-
-To use vcrypto we initiallize the `cipher` there and then create a `get_secret` dummy function that will call the cipher.
-
-```python
-from vcrypto import Cipher
-
-cipher = Cipher(secrets_file="data/secrets.yaml", filename_master_password="data/master.secret")
-
-def get_secret(key):
-    return cipher.get_secret(key)
-```
-
-Then you can use it elsewhere with:
-
-```python
-import utilities as u
-
-u.get_secret("secret")
-```
-
-## Development
-
-This package relies on [poetry](https://villoro.com/post/poetry) and `pre-commit`. In order to develop you need to install both libraries with:
-
+## **📝 Installation**
+Install via **pip**:
 ```sh
-pip install poetry pre-commit
-poetry install
-pre-commit install
+pip install vcrypto
 ```
 
-Then you need to add `poetry run` before any python shell command. For example:
+---
 
+## **🚀 Quickstart**
+### **1️⃣ Initialize vcrypto**
+Before using `vcrypto`, initialize it with:
+```python
+from vcrypto import init_vcrypto
+
+init_vcrypto(secrets_file="secrets.yaml", environ_var_name="MY_ENV_VAR")
+```
+This ensures `vcrypto` knows where to store secrets and how to retrieve the master password.
+
+### **2️⃣ Store and Retrieve Secrets**
+#### **Save a Secret**
+```python
+from vcrypto import save_secret
+
+save_secret("SECRET_TOKEN", "super_secret_value")
+```
+
+#### **Retrieve a Secret**
+```python
+from vcrypto import read_secret
+
+token = read_secret("SECRET_TOKEN")
+print(token)  # Output: super_secret_value
+```
+
+---
+
+## **⚙️ Customization**
+The `init_vcrypto` function allows customization:
+
+| Parameter                 | Description |
+|---------------------------|-------------|
+| `secrets_file`            | Path to the encrypted secrets file (JSON/YAML) |
+| `filename_master_password`| Path to the master password file (optional, defaults to `master.password`) |
+| `environ_var_name`        | Name of an environment variable to retrieve the master password |
+
+**Example:**
+```python
+init_vcrypto(secrets_file="config/secrets.yaml", filename_master_password="config/master.secret")
+```
+This setup stores **both** the `master.password` and `secrets.yaml` in the `config/` folder.
+
+---
+
+## **🛠️ Development**
+This project uses [`uv`](https://github.com/astral-sh/uv) for dependency management.
+
+### **Install dependencies**
 ```sh
-# DO
-poetry run python master.py
-
-# don't do
-python master.py
+pip install uv
+uv venv
+uv install
 ```
 
-## Authors
-* [Arnau Villoro](https://villoro.com)
+---
 
-## License
-The content of this repository is licensed under a [MIT](https://opensource.org/licenses/MIT).
+## **💜 License**
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
+
+---
+
+## **👤 Author**
+- **[Arnau Villoro](https://villoro.com)**
+
+---
