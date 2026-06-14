@@ -1,5 +1,6 @@
 import json
 import os
+import tempfile
 from pathlib import Path
 
 import yaml
@@ -31,7 +32,10 @@ def get_password(filename=FILE_MASTER_DEFAULT, environ_var_name=None):
         ValueError: If no password is found.
     """
     if environ_var_name and (password := os.getenv(environ_var_name)):
-        return password.encode()
+        # Strip to mirror the file branch below; a Fernet key never contains
+        # surrounding whitespace, so a stray newline would only cause a
+        # confusing decryption failure.
+        return password.strip().encode()
 
     path = Path(filename)
     if path.exists():
@@ -65,13 +69,28 @@ def store_dictionary(data: dict, filename: str):
     """
     Stores a dictionary in a JSON or YAML file.
 
+    The file is written atomically (to a temporary file in the same directory,
+    then renamed) so an interrupted write cannot truncate or corrupt the
+    existing secrets file.
+
     Args:
         data (dict): Dictionary to store.
         filename (str): Destination file.
     """
     path = Path(filename)
     content = json.dumps(data, indent=2) if _is_json(path) else yaml.dump(data)
-    path.write_text(content, encoding="utf-8")
+
+    # Write to a temp file in the same directory, then atomically replace the
+    # target. os.replace is atomic on the same filesystem on POSIX and Windows.
+    fd, tmp_name = tempfile.mkstemp(dir=path.parent or ".", suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as stream:
+            stream.write(content)
+        os.replace(tmp_name, path)
+    except BaseException:
+        if os.path.exists(tmp_name):
+            os.unlink(tmp_name)
+        raise
 
 
 def read_dictionary(filename: str, fail_if_missing=True) -> dict:
