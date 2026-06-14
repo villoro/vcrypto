@@ -1,12 +1,34 @@
+from pathlib import Path
+
+import pytest
+
 from vcrypto.encryption import create_password
 from vcrypto.encryption import decrypt
 from vcrypto.encryption import encrypt
+
+TEMP_PASSWORD_FILE = "temp.password"
+
+
+@pytest.fixture(autouse=True)
+def cleanup_files():
+    """Ensures test files are removed after each test."""
+    yield
+    Path(TEMP_PASSWORD_FILE).unlink(missing_ok=True)
 
 
 def test_store_secret():
     """Test password creation with storing"""
 
-    assert create_password(filename="temp.password") is not None
+    assert create_password(filename=TEMP_PASSWORD_FILE) is not None
+
+
+def test_create_password_does_not_overwrite():
+    """Refuse to overwrite an existing master password file."""
+
+    create_password(filename=TEMP_PASSWORD_FILE)
+
+    with pytest.raises(FileExistsError, match="Refusing to overwrite"):
+        create_password(filename=TEMP_PASSWORD_FILE)
 
 
 def test_encrypt():
