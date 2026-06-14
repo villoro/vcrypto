@@ -95,5 +95,5 @@ def export_secret(uri, secret_name, binary=False):
     secret = get_secret(secret_name, encoding="utf8" if not binary else None)
 
     logger.info(f"Writing {secret_name=} to {uri=}")
-    with open(uri, "wb" if binary else "w") as stream:
-        stream.write(secret)
+    # The exported file holds the decrypted secret, so restrict it to the owner.
+    encryption.write_private_file(uri, secret)
