@@ -1,6 +1,6 @@
 [project]
 name = "vcrypto"
-version = "4.2.1"
+version = "4.3.0"
 description = "Utility to easily store passwords/secrets"
 authors = [{ name = "Arnau Villoro", email = "arnau@villoro.com" }]
 maintainers = [{ name = "Arnau Villoro", email = "arnau@villoro.com" }]
@@ -26,7 +26,11 @@ classifiers = [
 dependencies = [
     "cryptography>=44.0.1",
     "loguru>=0.7.3",
-    "pytest>=8.3.4",
     "pyyaml>=6.0.2",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.4",
     "ruff>=0.9.7",
 ]
