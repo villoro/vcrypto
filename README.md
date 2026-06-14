@@ -72,9 +72,15 @@ The `init_vcrypto` function allows customization:
 
 **Example:**
 ```python
-init_vcrypto(secrets_file="config/secrets.yaml", filename_master_password="config/master.secret")
+init_vcrypto(secrets_file="config/secrets.yaml", filename_master_password="config/master.password")
 ```
 This setup stores **both** the `master.password` and `secrets.yaml` in the `config/` folder.
+
+> [!CAUTION]
+> The master password file must **never** be committed. The bundled `.gitignore`
+> only excludes `*.password`, so if you choose a custom name make sure it is
+> covered by your `.gitignore`. Committing the master password alongside the
+> encrypted `secrets.yaml` defeats the entire scheme.
 
 ---
 

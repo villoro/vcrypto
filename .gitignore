@@ -47,6 +47,9 @@ dist/
 /data
 */data
 
+# Claude Code local config
+.claude/settings.local.json
+
 
 # --------------------- PROJECT EXCLUSIONS ------------------------------------
 # Playground notebooks
